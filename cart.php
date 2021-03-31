@@ -54,7 +54,7 @@
                 const removeButtons = document.querySelectorAll(".remove");
                 const quantityInputs = document.querySelectorAll(".quantity");
                 
-                function recalculateTotals(element) {
+                function recalculateSubtotals(element) {
 
                     const tr = element.parentNode.parentNode;
                     const price = tr.dataset.price ;
@@ -62,6 +62,10 @@
 
                     tr.querySelector(".subtotal").textContent = price * quantity;
                     
+                    recalculateTotal();
+                }
+
+                function recalculateTotal() {
                     let total = 0;
                     for(let subtotal of document.querySelectorAll(".subtotal") ) {
                         total = total + Number(subtotal.textContent);
@@ -87,6 +91,8 @@
                             if( parsedResponse.status == "OK" ) {
                                 
                                 button.parentNode.parentNode.remove();
+
+                                recalculateTotal();
                             }
                         });
 
@@ -111,7 +117,7 @@
                         .then( parsedResponse => {
                             if( parsedResponse.status == "OK" ) {
                                 
-                                recalculateTotals( input );
+                                recalculateSubtotals( input );
                             }
                         });
                         
