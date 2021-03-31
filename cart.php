@@ -39,18 +39,47 @@
 ?>
 <!DOCTYPE html>
 <html lang="pt">
-<head>
-	<meta charset="UTF-8">
-	<title>Ultra Shop - Carrinho</title>
-	<style>
-	
-		table, tr, td, th {
-			border: 1px solid black;
-			border-collapse: collapse;
-		}
-	</style>
-</head>
-<body>
+    <head>
+        <meta charset="UTF-8">
+        <title>Ultra Shop - Carrinho</title>
+        <style>        
+            table, tr, td, th {
+                border: 1px solid black;
+                border-collapse: collapse;
+            }
+        </style>
+        <script>
+            document.addEventListener("DOMContentLoaded", () => {
+
+                const removeButtons = document.querySelectorAll(".remove");
+
+                for(let button of removeButtons) {
+
+                    button.addEventListener("click", () => {
+
+                        const product_id = button.dataset.product_id;
+
+                        fetch("requests.php", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type":"application/x-www-form-urlencoded"
+                            },
+                            body: "request=removeProduct&product_id=" + product_id
+                        })
+                        .then( response => response.json() )
+                        .then( parsedResponse => {
+                            if( parsedResponse.status == "OK" ) {
+                                
+                                button.parentNode.parentNode.remove();
+                            }
+                        });
+
+                    });
+                }
+            });
+        </script>
+    </head>
+    <body>
 <?php 
     if(isset($_SESSION["cart"])) {
 ?>
@@ -60,6 +89,7 @@
                 <th>Quantidade</th>
                 <th>Preço</th>
                 <th>Total</th>
+                <th>Apagar</th>
             </tr>
 
             <?php
@@ -75,6 +105,9 @@
                     <td>' .$item["quantity"]. '</td>
                     <td>'.$item["price"].'€</td>
                     <td><span class="subtotal">'.$subtotal.'</span>€</td>
+                    <td>
+                        <button data-product_id="' .$item["product_id"]. '" type="button" class="remove">X</button>
+                    </td>
                 </tr>
 
                 ';
@@ -87,7 +120,7 @@
 
             <tr>
                 <td colspan="3"></td>
-                <td><span class="total"><?php echo $total; ?></span>€</td>
+                <td colspan="2"><span class="total"><?php echo $total; ?></span>€</td>
             </tr>
 
         </table>
@@ -101,5 +134,5 @@
         echo "<p>Ainda não tem artigos adicionados</p>";
     }
 ?>
-</body>
+    </body>
 </html>
