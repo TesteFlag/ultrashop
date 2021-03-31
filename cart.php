@@ -53,6 +53,11 @@
 
                 const removeButtons = document.querySelectorAll(".remove");
                 const quantityInputs = document.querySelectorAll(".quantity");
+                
+                function recalculateTotals() {
+                    
+                    return null;
+                }
 
                 for(let button of removeButtons) {
 
